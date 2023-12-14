@@ -11,11 +11,11 @@ const client = new DynamoDBClient({});
 const ddbDocClient = DynamoDBDocumentClient.from(client);
 
 export const getStoreStatusHandler = async () => {
-  const storeStatus = false;
-  return { storeStatus };
+  const storeStatus = true;
+  return true;
 };
 
 export const getStoreCapacityHandler = async () => {
   const capacityStatus = true;
-  return { capacityStatus };
+  return true;
 };
