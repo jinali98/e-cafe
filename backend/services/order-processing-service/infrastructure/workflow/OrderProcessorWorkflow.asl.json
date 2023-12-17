@@ -1,0 +1,58 @@
+{
+  "Comment": "order processor workflow.",
+  "StartAt": "getStoreStatus",
+  "States": {
+    "getStoreStatus": {
+      "Type": "Task",
+      "Resource": "${getStoreStatus}",
+      "ResultPath": "$.storeStatus",
+      "Next": "isStoreOpen"
+    },
+
+    "isStoreOpen": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.storeStatus",
+            "BooleanEquals": true
+          },
+          "Next": "emit-shopIsClosed"
+        }
+      ],
+      "Default": "getCapacity"
+    },
+    "emit-shopIsClosed": {
+      "Type": "Pass",
+      "End": true
+    },
+    "getCapacity": {
+      "Type": "Task",
+      "Resource": "${getStoreCapacity}",
+      "ResultPath": "$.capacityStatus",
+      "Next": "isCapacityEnough"
+    },
+    "isCapacityEnough": {
+      "Type": "Choice",
+      "Choices": [
+        {
+          "Not": {
+            "Variable": "$.capacityStatus",
+            "BooleanEquals": true
+          },
+          "Next": "emit-notEnoughCapacity"
+        }
+      ],
+      "Default": "Pass"
+    },
+    "Pass": {
+      "Type": "Pass",
+      "End": true
+    },
+
+    "emit-notEnoughCapacity": {
+      "Type": "Pass",
+      "End": true
+    }
+  }
+}
